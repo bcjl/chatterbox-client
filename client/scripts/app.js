@@ -15,7 +15,7 @@ var App = function(){
   this.queryFilter = {
     limit: 10,
     order: "-updatedAt",
-    where: '{"roomname": "default"}'
+    // where: '{"roomname": "default"}'
   };
 
   this.username = this.escapeHtml(window.location.search.slice(10));
@@ -27,19 +27,22 @@ var App = function(){
 
 App.prototype.display = function(results){
   var that = this;
+  // Empty chat div
+  $('#chat').html('');
+
   results.forEach(function(msg){
     var room = that.escapeHtml(msg.roomname);
     var username = that.escapeHtml(msg.username);
     var text = that.escapeHtml(msg.text);
     var display = username + " : " + text + " @ " + room;
     var tag = '<p>' + display + '</p>';
-    $('#main').append(tag);
+    $('#chat').append(tag);
   });
 };
 
 App.prototype.init = function(){
   var that = this;
-  that.fetch(this.queryFilter, setLocalResult); //Why needs THAT?!
+  that.fetch(that.queryFilter, setLocalResult); //Why needs THAT?!
   // that.display(localResult);
 };
 
@@ -114,11 +117,16 @@ var setLocalResult = function(data){
 };
 
 
+setInterval(function(){
+  app.init();
+  console.log("refresh");
+}, 2000);
 
-app.init();
+// setInterval(app.init, 2000);
 
-var newRoom = "hello";
-$(".dropdown-menu").append('<li role="presentation"><a role="menuitem" tabindex="-1" href="#">' + newRoom + '</a></li>');
+
+// var newRoom = "hello";
+// $(".dropdown-menu").append('<li role="presentation"><a role="menuitem" tabindex="-1" href="#">' + newRoom + '</a></li>');
 
 
 // setInterval(function, wait);
