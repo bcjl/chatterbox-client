@@ -97,6 +97,14 @@ var message = {
 };
 
 
+var existingRooms = {};
+
+var populateRooms = function(data){
+  data.results.forEach(function(msg){
+    existingRooms.hasOwnProperty()
+  });
+};
+
 var app = new App();
 var localResult;
 
@@ -105,16 +113,17 @@ var setLocalResult = function(data){
   app.display(localResult);
 };
 
+
+
 app.init();
+
+var newRoom = "hello";
+$(".dropdown-menu").append('<li role="presentation"><a role="menuitem" tabindex="-1" href="#">' + newRoom + '</a></li>');
+
 
 // setInterval(function, wait);
 
 
-// console.log(localResult);
-// app.fetch(app.queryFilter, setLocalResult);
-
-// var localResult = app.fetch(app.queryFilter);
-// console.log("Outside");
 
 
 
