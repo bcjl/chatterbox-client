@@ -14,15 +14,33 @@ var App = function(){
 
   this.queryFilter = {
     limit: 10,
-    order: "-updatedAt"
-    // notEqualTo: "username:ScreamBot"
+    order: "-updatedAt",
+    where: '{"roomname": "default"}'
   };
+
+  this.username = this.escapeHtml(window.location.search.slice(10));
+  // this.currentRoom = ;
+
+  // this.results
+
 };
 
+App.prototype.display = function(results){
+  var that = this;
+  results.forEach(function(msg){
+    var room = that.escapeHtml(msg.roomname);
+    var username = that.escapeHtml(msg.username);
+    var text = that.escapeHtml(msg.text);
+    var display = username + " : " + text + " @ " + room;
+    var tag = '<p>' + display + '</p>';
+    $('#main').append(tag);
+  });
+};
 
 App.prototype.init = function(){
   var that = this;
-  that.fetch(this.queryFilter); //Why needs THAT?!
+  that.fetch(this.queryFilter, setLocalResult); //Why needs THAT?!
+  // that.display(localResult);
 };
 
 App.prototype.send = function(message){
@@ -42,8 +60,8 @@ App.prototype.send = function(message){
   });
 };
 
-App.prototype.fetch = function(filter){
-
+App.prototype.fetch = function(filter, cb){
+  var results;
   var that = this;
   $.ajax({
     // always use this url
@@ -53,22 +71,14 @@ App.prototype.fetch = function(filter){
     contentType: 'application/json',
 
     success: function(data){
-      console.log(data.results.length);
-      console.log(data.results);
-      var results = data.results;
-      results.forEach(function(msg){
-        var username = that.escapeHtml(msg.username);
-        var text = that.escapeHtml(msg.text);
-        var display = username + " : " + text;
-        var tag = '<p>' + display + '</p>';
-        $('#main').append(tag);
-      });
+      cb(data);
     },
     error: function (data) {
       // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
       console.error('chatterbox: GET Failed');
     }
   });
+  return results;
 };
 
 
@@ -88,10 +98,23 @@ var message = {
 
 
 var app = new App();
+var localResult;
 
-// app.init();
+var setLocalResult = function(data){
+  localResult = data.results;
+  app.display(localResult);
+};
 
-// app.fetch(app.queryFilter);
+app.init();
+
+// setInterval(function, wait);
+
+
+// console.log(localResult);
+// app.fetch(app.queryFilter, setLocalResult);
+
+// var localResult = app.fetch(app.queryFilter);
+// console.log("Outside");
 
 
 
