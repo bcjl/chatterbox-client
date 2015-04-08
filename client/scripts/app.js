@@ -13,13 +13,18 @@ var App = function(){
   };
 
   this.queryFilter = {
-    limit: 10,
+    limit: 100,
     order: "-updatedAt",
     // where: '{"roomname": "default"}'
   };
 
+  this.roomFilter = {
+    limit: 500,
+    order: '-updatedAt'
+  };
+
   this.username = this.escapeHtml(window.location.search.slice(10));
-  // this.currentRoom = ;
+  this.currentRoom = 'default';
 
   // this.results
 
@@ -92,6 +97,11 @@ App.prototype.escapeHtml = function(string) {
   });
 };
 
+App.prototype.generateRoomnames = function(){
+  var that = this;
+  that.fetch(that.roomFilter, populateRooms);
+};
+
 
 var message = {
   'username': 'foobar',
@@ -99,14 +109,6 @@ var message = {
   'roomname': 'foobar'
 };
 
-
-var existingRooms = {};
-
-var populateRooms = function(data){
-  data.results.forEach(function(msg){
-    existingRooms.hasOwnProperty()
-  });
-};
 
 var app = new App();
 var localResult;
@@ -116,35 +118,72 @@ var setLocalResult = function(data){
   app.display(localResult);
 };
 
+// Populate rooms
+//
+//
+var existingRooms = {};
+
+var populateRooms = function(data){
+  data.results.forEach(function(msg){
+    var roomname = app.escapeHtml(msg.roomname);
+    if (!existingRooms.hasOwnProperty(roomname)){
+      existingRooms[roomname] = roomname;
+    }
+  });
+
+  $('#roomnameList').html('');
+
+  for(var key in existingRooms){
+    var roomnameHTML = '<li class="existingRooms" role="presentation"><a role="menuitem" tabindex="-1" href="#">' + existingRooms[key] +'</a></li>';
+    $('#roomnameList').append(roomnameHTML);
+  }
+
+  $('.existingRooms a').on('click', function(){
+    var roomname = $(this).text();
+    app.currentRoom = roomname;
+    app.queryFilter.where = '{"roomname": \"'+ roomname +'\"}';
+  });
+
+};
+
 
 setInterval(function(){
   app.init();
-  console.log("refresh");
+  // console.log("refresh");
 }, 2000);
+
+app.generateRoomnames();
+setInterval(function(){
+  app.generateRoomnames();
+}, 15000);
+
+
+
 
 // setInterval(app.init, 2000);
 //
 $('#send').on('click',function(){
-  console.log("send");
+  // console.log("send");
 
   console.log($("#message")[0].value);
 
   var message = {
     'username': app.username,
     'text': $("#message")[0].value,
-    'roomname': 'default'
+    'roomname': app.currentRoom
   };
 
   app.send(message);
 
 });
 
+$('#createRoom').on('click',function(){
+  var roomname = $("#roomname")[0].value;
+  app.currentRoom = roomname;
+  app.queryFilter.where = '{"roomname": \"'+ roomname +'\"}';
+});
 
-// var newRoom = "hello";
-// $(".dropdown-menu").append('<li role="presentation"><a role="menuitem" tabindex="-1" href="#">' + newRoom + '</a></li>');
 
-
-// setInterval(function, wait);
 
 
 

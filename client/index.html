@@ -29,13 +29,24 @@
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
+      <div class="col-lg-6">
+        <div class="input-group">
+          <input id="roomname" type="text" class="form-control" placeholder="Enter a new roomname...">
+          <span class="input-group-btn">
+            <button id="createRoom" class="btn btn-default" type="button">Create!</button>
+          </span>
+        </div><!-- /input-group -->
+      </div><!-- /.col-lg-6 -->
+
       <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
           Dropdown
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Roomname</a></li>
+        <ul id="roomnameList" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+          <li class="existingRooms" role="presentation"><a role="menuitem" tabindex="-1" href="#">Roomname1</a></li>
+          <li class="existingRooms" role="presentation"><a role="menuitem" tabindex="2" href="#">Roomname2</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="1" href="#">Roomname3</a></li>
         </ul>
       </div>
       <div id="chat">
