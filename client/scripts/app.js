@@ -123,6 +123,21 @@ setInterval(function(){
 }, 2000);
 
 // setInterval(app.init, 2000);
+//
+$('#send').on('click',function(){
+  console.log("send");
+
+  console.log($("#message")[0].value);
+
+  var message = {
+    'username': app.username,
+    'text': $("#message")[0].value,
+    'roomname': 'default'
+  };
+
+  app.send(message);
+
+});
 
 
 // var newRoom = "hello";
